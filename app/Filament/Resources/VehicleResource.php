@@ -3,7 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehicleResource\Pages;
+use App\Models\Company;
 use App\Models\Vehicle;
+use App\Rules\PlateNumberRule;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -26,9 +28,14 @@ class VehicleResource extends Resource
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('weight')->required(),
-                TextInput::make('plate_number')->required(),
-                Select::make('company_id')->relationship('company', 'name')->required()
-                    ->searchable()->optionsLimit(7)->preload(),
+                TextInput::make('plate_number')->rule(new PlateNumberRule)->required(),
+                Select::make('company_id')
+                    ->label('Company')
+                    ->required()
+                    ->searchable()
+                    ->optionsLimit(7)
+                    ->preload()
+                    ->options(Company::getCachedOptions()),
             ]);
     }
 

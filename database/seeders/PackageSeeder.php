@@ -2,20 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Package;
-use App\Models\Trip;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TripSeeder extends Seeder
+class PackageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Trip::factory(2000)->create()->each(function (Trip $trip) {
-            Package::factory(1)->forTrip($trip)->create();
-        });
+        //
     }
 }

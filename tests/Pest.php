@@ -1,4 +1,6 @@
 <?php
+use Filament\Facades\Filament;
+use function Pest\Laravel\actingAs;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,8 +14,8 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -45,3 +47,9 @@ function something()
 {
     // ..
 }
+
+beforeEach(function () {
+    if (method_exists(Filament::class, 'getPanel')) {
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+    }
+});

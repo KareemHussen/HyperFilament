@@ -47,7 +47,7 @@ class TripResource extends Resource
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->options(Company::pluck('name', 'id'))
+                    ->options(Company::getCachedOptions())
                     ->optionsLimit(7)
                     ->afterStateUpdated(function (Forms\Set $set){
                         $set('vehicle_id', null);
@@ -69,7 +69,7 @@ class TripResource extends Resource
                     ->live()
                     ->placeholder('Select Vehicle')
                     ->options(function (Forms\Get $get) {
-                        return Vehicle::where('company_id', $get('company_id'))->pluck('name', 'id');
+                        return Vehicle::getCachedByCompany($get('company_id'))->pluck('name', 'id');
                     })
                     ->disabled(fn (Forms\Get $get) => ! $get('company_id')) 
                     ->optionsLimit(7),
@@ -82,7 +82,7 @@ class TripResource extends Resource
                     ->searchable()
                     ->placeholder('Select Driver')
                     ->options(function (Forms\Get $get) {
-                        return Driver::where('company_id', $get('company_id'))->pluck('name', 'id');
+                        return Driver::getCachedByCompany($get('company_id'))->pluck('name', 'id');
                     })
                     ->disabled(fn (Forms\Get $get) => ! $get('company_id'))
                     ->optionsLimit(7),
@@ -95,7 +95,7 @@ class TripResource extends Resource
                     ->preload()
                     ->reactive()
                     ->dehydrated(false)
-                    ->options(City::pluck('name', 'id'))
+                    ->options(City::getCachedOptions())
                     ->afterStateUpdated(function (Forms\Set $set){
                         $set('from_area', null);
                     })
@@ -113,7 +113,7 @@ class TripResource extends Resource
                     ->preload()
                     ->reactive()
                     ->dehydrated(false)
-                    ->options(City::pluck('name', 'id'))
+                    ->options(City::getCachedOptions())
                     ->afterStateUpdated(function (Forms\Set $set){
                         $set('to_area', null);
                     })

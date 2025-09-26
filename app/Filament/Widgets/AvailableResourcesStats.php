@@ -8,9 +8,11 @@ use App\Models\Company;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Livewire\Attributes\On;
+use App\Support\Widgets\CacheableWidget;
 
 class AvailableResourcesStats extends StatsOverviewWidget
 {
+    use CacheableWidget;
     protected static  bool $isDiscovered  = false;
     protected int | string | array $columnSpan = 'full';
 
@@ -44,14 +46,22 @@ class AvailableResourcesStats extends StatsOverviewWidget
             ];
         }
 
-        $drivers = $this->getAvailableDrivers()->count();
-        $vehicles = $this->getAvailableVehicles()->count();
-        $companies = collect()
-            ->concat($this->getAvailableDrivers()->pluck('company.name'))
-            ->concat($this->getAvailableVehicles()->pluck('company.name'))
-            ->unique()
-            ->filter()
-            ->count();
+        $cacheKey = md5(json_encode([
+            'start' => $this->startDate,
+            'end' => $this->endDate,
+        ]));
+
+        [$drivers, $vehicles, $companies] = $this->rememberWidget("available_stats:{$cacheKey}", 300, function () {
+            $drivers = $this->getAvailableDrivers()->count();
+            $vehicles = $this->getAvailableVehicles()->count();
+            $companies = collect()
+                ->concat($this->getAvailableDrivers()->pluck('company.name'))
+                ->concat($this->getAvailableVehicles()->pluck('company.name'))
+                ->unique()
+                ->filter()
+                ->count();
+            return [$drivers, $vehicles, $companies];
+        });
 
         return [
             Stat::make('Available Drivers', $drivers)

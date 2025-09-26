@@ -59,3 +59,45 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Docker
+
+The project includes a Docker setup for local development and testing.
+
+### Prerequisites
+
+- Docker Desktop 4.0+
+
+### Quick start
+
+1. Create a `.env.docker` from `.env.example` and update DB and Redis hosts to `mysql` and `redis`.
+2. Build and start containers:
+
+```bash
+docker compose up -d --build
+```
+
+3. Visit the app at `http://localhost:8080`.
+
+### Common commands
+
+```bash
+# Tail app logs
+docker compose logs -f app
+
+# Run artisan
+docker compose exec app php artisan migrate
+
+# Run tests
+docker compose exec app php artisan test
+```
+
+Services:
+
+- app: PHP 8.2 FPM (laravel)
+- web: Nginx serving `public/`
+- mysql: MySQL 8.0
+- redis: Redis 7
+- queue: Laravel queue worker
+- scheduler: Laravel scheduler
+

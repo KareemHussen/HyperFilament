@@ -6,9 +6,11 @@ use App\Enums\TripStatus;
 use App\Models\Trip;
 use Filament\Widgets\ChartWidget;
 use Carbon\Carbon;
+use App\Support\Widgets\CacheableWidget;
 
 class TripsChart extends ChartWidget
 {
+    use CacheableWidget;
     protected static ?int $sort = 3;
 
     protected int | string | array $columnSpan = 'full';
@@ -20,22 +22,25 @@ class TripsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $months = collect(range(1, 12))->map(function ($month) {
-            return [
-                'month' => Carbon::create(null, $month)->format('M'),
-                'InProgress' => Trip::whereMonth('start_date', $month)
-                    ->whereYear('start_date', now()->year)
-                    ->whereNotIn('status', [TripStatus::DELIVERED, TripStatus::CANCELLED])
-                    ->count(),
-                'completed' => Trip::whereMonth('start_date', $month)
-                    ->whereYear('start_date', now()->year)
-                    ->where('status', TripStatus::DELIVERED)
-                    ->count(),
-                'cancelled' => Trip::whereMonth('start_date', $month)
-                    ->whereYear('start_date', now()->year)
-                    ->where('status', TripStatus::CANCELLED)
-                    ->count(),
-            ];
+        $year = now()->year;
+        $months = $this->rememberWidget("trips_chart:{$year}", 600, function () use ($year) {
+            return collect(range(1, 12))->map(function ($month) use ($year) {
+                return [
+                    'month' => Carbon::create(null, $month)->format('M'),
+                    'scheduled' => Trip::whereMonth('start_date', $month)
+                        ->whereYear('start_date', $year)
+                        ->whereNotIn('status', [TripStatus::DELIVERED, TripStatus::CANCELLED])
+                        ->count(),
+                    'completed' => Trip::whereMonth('start_date', $month)
+                        ->whereYear('start_date', $year)
+                        ->where('status', TripStatus::DELIVERED)
+                        ->count(),
+                    'cancelled' => Trip::whereMonth('start_date', $month)
+                        ->whereYear('start_date', $year)
+                        ->where('status', TripStatus::CANCELLED)
+                        ->count(),
+                ];
+            });
         });
 
         return [

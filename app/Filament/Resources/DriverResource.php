@@ -33,8 +33,13 @@ class DriverResource extends Resource
                 TextInput::make('email')->email()->unique(ignoreRecord: true)->required(),
                 TextInput::make('phone')->unique(ignoreRecord: true)->rule(new EgyptionPhoneNumberRule)->required(),
                 TextInput::make('license_number')->unique(ignoreRecord: true)->rule(new LicenseNumberRule)->required(),
-                Select::make('company_id')->relationship('company', 'name')->required()
-                    ->searchable()->optionsLimit(7)->preload(),
+                Select::make('company_id')
+                    ->label('Company')
+                    ->required()
+                    ->searchable()
+                    ->optionsLimit(7)
+                    ->preload()
+                    ->options(Company::getCachedOptions()),
             ]);
     }
 
