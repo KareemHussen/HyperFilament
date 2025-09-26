@@ -216,8 +216,6 @@ npm run dev
 
 ### Step 9: Access the Application
 - **Admin Panel**: `http://localhost:8000/admin`
-- **API Endpoints**: `http://localhost:8000/api`
-- **Web Interface**: `http://localhost:8000`
 
 ## 🏗️ Model Relationships
 
@@ -561,9 +559,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-- **Lead Developer**: [Your Name](https://github.com/your-username)
-- **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/your-profile)
-- **Email**: your.email@example.com
+- **Lead Developer**: [Your Name](https://github.com/kareemhussen)
+- **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/kareem-hussen)
+- **Email**: kareemhussen500@gmail.com
 
 ## 🙏 Acknowledgments
 
@@ -590,7 +588,6 @@ Before you begin, ensure you have the following installed:
 - **OS**: Windows 10+, macOS 10.15+, or Linux (Ubuntu 20.04+)
 
 ### Development Tools (Optional)
-- **Docker**: 20.x+ (for containerized development)
 - **Git**: 2.x+ (for version control)
 - **VS Code**: Latest version with PHP extensions
 
