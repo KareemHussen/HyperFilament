@@ -18,12 +18,12 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
 
-            $table->foreignId('vehicle_id')->nullable()->nullOnDelete();
-            $table->foreignId('driver_id')->nullable()->nullOnDelete();
-            $table->foreignId('company_id')->nullable()->nullOnDelete();
+            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
+            $table->foreignId('driver_id')->nullable()->constrained('drivers')->nullOnDelete();
+            $table->foreignId('company_id')->nullable()->constrained('companies')->nullOnDelete();
 
-            $table->foreignId('from_area')->nullable()->nullOnDelete();
-            $table->foreignId('to_area')->nullable()->nullOnDelete();
+            $table->foreignId('from_area')->nullable()->constrained('areas')->nullOnDelete();
+            $table->foreignId('to_area')->nullable()->constrained('areas')->nullOnDelete();
 
             $table->tinyInteger('status');
             

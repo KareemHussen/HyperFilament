@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\ActiveTripsTable;
+use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\TripsChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,7 +31,14 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Green,
+                'primary' => match(session('theme', request('theme', 'orange'))) {
+                    'blue' => Color::Blue,
+                    'green' => Color::Emerald,
+                    'orange' => Color::Orange,
+                    'red' => Color::Red,
+                    'purple' => Color::Purple,
+                    default => Color::Orange
+                },
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -37,8 +47,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                StatsOverview::class,
+                ActiveTripsTable::class,
+                TripsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -53,6 +64,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                'panels::topbar.end',
+                fn () => view('filament.components.theme-switcher')
+            );
     }
 }

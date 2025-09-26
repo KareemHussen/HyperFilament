@@ -15,14 +15,17 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Livewire\Component as Livewire;
 use function PHPUnit\Framework\isNull;
@@ -52,7 +55,7 @@ class TripResource extends Resource
                     }),
 
 
-                Forms\Components\ToggleButtons::make('status')
+                ToggleButtons::make('status')
                     ->inline()
                     ->options(TripStatus::class)
                     ->required()
@@ -93,15 +96,15 @@ class TripResource extends Resource
                     ->reactive()
                     ->dehydrated(false)
                     ->options(City::pluck('name', 'id'))
-                    ->optionsLimit(7)
                     ->afterStateUpdated(function (Forms\Set $set){
                         $set('from_area', null);
                     })
-                    ->afterStateHydrated(function (Forms\Set $set, Model $record = null) {
+                    ->afterStateHydrated(function (Forms\Set $set, ?Trip $record) {
                         if ($record && $record->from_area) {
                             $set('from_city', $record->fromArea->city_id);
                         }
                     }),
+
 
                 Select::make('to_city')
                     ->label('To City')
@@ -111,46 +114,41 @@ class TripResource extends Resource
                     ->reactive()
                     ->dehydrated(false)
                     ->options(City::pluck('name', 'id'))
-                    ->optionsLimit(7)
                     ->afterStateUpdated(function (Forms\Set $set){
                         $set('to_area', null);
                     })
-                    ->afterStateHydrated(function (Forms\Set $set, Model $record = null) {
+                    ->afterStateHydrated(function (Forms\Set $set, ?Trip $record) {
                         if ($record && $record->to_area) {
                             $set('to_city', $record->toArea->city_id);
                         }
                     }),
 
+
                 Select::make('from_area')
-                    ->label('From Area')
+                        ->label('From Area')
+                        ->required()
+                        ->reactive()
+                        ->relationship('toArea' , 'name' , modifyQueryUsing: fn (Builder $query, Forms\Get $get) =>
+                            $get('from_city')
+                                ? $query->where('city_id', $get('from_city'))
+                                : $query
+                        )
+                        ->placeholder('Select Area')
+                        ->disabled(fn (Forms\Get $get) => ! $get('from_city'))
+                        ->optionsLimit(7),
+                
+
+
+                Select::make('to_area')
+                    ->label('To Area')
                     ->required()
-                    ->relationship('fromArea' , 'name' , modifyQueryUsing: fn (Builder $query, Forms\Get $get) =>
+                    ->relationship('toArea' , 'name' , modifyQueryUsing: fn (Builder $query, Forms\Get $get) =>
                             $get('to_city')
                                 ? $query->where('city_id', $get('to_city'))
                                 : $query
                     )
-                    ->searchable()
-                    ->placeholder('Select Area')
-                    ->disabled(fn (Forms\Get $get) => ! $get('from_city'))
-                    ->options(function (Forms\Get $get) {
-                        return Area::where('city_id', $get('from_city'))->pluck('name', 'id');
-                    })
-                    ->optionsLimit(7),
-                    
-                Select::make('to_area')
-                    ->label('To Area')
-                    ->required()
-                    ->relationship('fromArea' , 'name' , modifyQueryUsing: fn (Builder $query, Forms\Get $get) =>
-                            $get('from_city')
-                                ? $query->where('city_id', $get('from_city'))
-                                : $query
-                    )
-                    ->searchable()
                     ->placeholder('Select Area')
                     ->disabled(fn (Forms\Get $get) => ! $get('to_city'))
-                    ->options(function (Forms\Get $get) {
-                        return Area::where('city_id', $get('to_city'))->pluck('name', 'id');
-                    })
                     ->optionsLimit(7),
 
 
@@ -275,7 +273,17 @@ class TripResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('company.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('driver.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('vehicle.name')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('status')->badge(),
+                TextColumn::make('fromArea.name')->sortable()->searchable(),
+                TextColumn::make('toArea.name')->sortable()->searchable(),
+                TextColumn::make('start_date')->sortable()->dateTime('Y-m-d h:i A')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('end_date')->sortable()->dateTime('Y-m-d h:i A')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->sortable()->dateTime('Y-m-d h:i A')->toggleable(isToggledHiddenByDefault: true),
+                
+                // TextColumn::make('total_weight')->sortable()->searchable(),
             ])
             ->filters([
                 SelectFilter::make('status')->label('Status')

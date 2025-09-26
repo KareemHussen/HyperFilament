@@ -1,0 +1,155 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* HyperSender Transport Theme - Enhanced with Filament 4 best practices */
+
+
+/* Transportation-themed color variables */
+
+:root {
+    --transport-emerald: 5 150 105;
+    --transport-green: 16 185 129;
+    --transport-blue: 59 130 246;
+    --transport-orange: 245 158 11;
+}
+
+
+/* Enhanced sidebar with transport vibes */
+
+.fi-sidebar {
+    background: linear-gradient(180deg, rgb(248 250 252) 0%, rgb(241 245 249) 100%);
+    border-right: 1px solid rgb(226 232 240);
+}
+
+.dark .fi-sidebar {
+    background: linear-gradient(180deg, rgb(15 23 42) 0%, rgb(30 41 59) 100%);
+    border-right-color: rgb(51 65 85);
+}
+
+
+/* Active navigation with transport theme */
+
+.fi-sidebar-item-button[aria-current="page"] {
+    background: linear-gradient(135deg, rgb(var(--transport-emerald)) 0%, rgb(var(--transport-green)) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(var(--transport-emerald), 0.4);
+    border-radius: 12px;
+}
+
+
+/* Enhanced topbar */
+
+.fi-topbar {
+    background: linear-gradient(135deg, rgb(var(--transport-emerald)) 0%, rgb(var(--transport-green)) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(var(--transport-green), 0.2);
+}
+
+
+/* Cards with glass morphism */
+
+.fi-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--transport-emerald), 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.dark .fi-section {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(var(--transport-emerald), 0.2);
+}
+
+
+/* Enhanced stats cards */
+
+.fi-stats-overview-stat {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fi-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, rgb(var(--transport-emerald)), rgb(var(--transport-blue)), rgb(var(--transport-orange)));
+}
+
+.fi-stats-overview-stat:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(var(--transport-emerald), 0.25);
+}
+
+
+/* Buttons with transport theme */
+
+.fi-btn-primary {
+    background: linear-gradient(135deg, rgb(var(--transport-emerald)) 0%, rgb(var(--transport-green)) 100%);
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.fi-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(var(--transport-emerald), 0.4);
+}
+
+
+/* Tables with enhanced styling */
+
+.fi-ta-table {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.fi-ta-header-cell {
+    background: linear-gradient(135deg, rgba(var(--transport-emerald), 0.1) 0%, rgba(var(--transport-green), 0.1) 100%);
+    font-weight: 600;
+    color: rgb(var(--transport-emerald));
+}
+
+
+/* Badge enhancements */
+
+.fi-badge {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+}
+
+
+/* Responsive enhancements */
+
+@media (max-width: 768px) {
+    .fi-section {
+        border-radius: 12px;
+        margin: 0.5rem;
+    }
+}
+
+
+/* Animation keyframes */
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fi-section {
+    animation: slideInUp 0.6s ease-out;
+}

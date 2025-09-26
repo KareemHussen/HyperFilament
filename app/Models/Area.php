@@ -9,4 +9,15 @@ class Area extends Model
 {
     /** @use HasFactory<\Database\Factories\AreaFactory> */
     use HasFactory;
+
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
+    }
 }
