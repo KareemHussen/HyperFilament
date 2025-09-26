@@ -350,25 +350,6 @@ Company (1) ──── (N) Driver
 - **Cascading**: Company deletion affects all related entities
 - **Overlap Prevention**: Drivers/Vehicles cannot have overlapping trips
 
-## 🐳 Docker Setup
-
-### Using Docker Compose
-```bash
-# Build and start containers
-docker compose up -d --build
-
-# Access the application
-http://localhost:8080
-```
-
-### Docker Services
-- **app**: PHP 8.2 FPM with all required extensions
-- **web**: Nginx serving the application
-- **mysql**: MySQL 8.0 with optimized configuration
-- **redis**: Redis 7 for caching and sessions
-- **queue**: Laravel queue worker
-- **scheduler**: Laravel task scheduler
-
 ## 📈 Performance Monitoring
 
 ### Cache Management Commands
