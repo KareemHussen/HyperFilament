@@ -20,6 +20,13 @@ return new class extends Migration
             $table->string('phone' , 20)->nullable()->unique();
             $table->string('website')->nullable();
             $table->timestamps();
+
+
+            // For industry filtering and sorting
+            $table->index(['industry', 'name'], 'idx_companies_industry_name');
+
+            // For searchable fields
+            $table->index(['name', 'email'], 'idx_companies_name_email');
         });
     }
 

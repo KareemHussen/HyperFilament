@@ -18,6 +18,16 @@ return new class extends Migration
             $table->integer('weight');
             $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
+
+            // For company-based queries (most frequent)
+            $table->index(['company_id', 'name'], 'idx_vehicles_company_name');
+        
+            // For plate number searches
+            $table->index('plate_number', 'idx_vehicles_plate');
+            
+            // For weight-based sorting
+            $table->index(['weight', 'company_id'], 'idx_vehicles_weight_company');
+
         });
     }
 

@@ -19,6 +19,15 @@ return new class extends Migration
             $table->string('license_number' , 8)->unique();
             $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
+
+            // For company-based queries (most frequent)
+            $table->index(['company_id', 'name'], 'idx_drivers_company_name');
+        
+            // For unique constraints and search
+            $table->index(['email', 'phone'], 'idx_drivers_email_phone');
+            
+            // For license number searches
+            $table->index('license_number', 'idx_drivers_license');
         });
     }
 

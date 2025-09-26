@@ -23,6 +23,13 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->foreignId('trip_id')->constrained('trips')->cascadeOnDelete();
             $table->timestamps();
+
+
+            // For trip-based queries
+            $table->index(['trip_id', 'type'], 'idx_packages_trip_type');
+
+            // For weight calculations
+            $table->index(['trip_id', 'weight'], 'idx_packages_trip_weight');
         });
     }
 

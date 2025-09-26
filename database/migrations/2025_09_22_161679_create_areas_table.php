@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name' , 100);
             $table->foreignId('city_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
+
+            // For city-based queries (most frequent)
+            $table->index(['city_id', 'name'], 'idx_areas_city_name');
         });
     }
 

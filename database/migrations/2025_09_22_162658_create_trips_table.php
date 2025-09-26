@@ -28,6 +28,32 @@ return new class extends Migration
             $table->tinyInteger('status');
             
             $table->timestamps();
+
+
+
+            // For status-based filtering (most common)
+            $table->index(['status', 'start_date'], 'idx_trips_status_start_date');
+            
+            // For company-based queries
+            $table->index(['company_id', 'status'], 'idx_trips_company_status');
+            
+            // For date range queries
+            $table->index(['start_date', 'end_date'], 'idx_trips_date_range');
+            
+            // For driver-based queries
+            $table->index(['driver_id', 'status'], 'idx_trips_driver_status');
+            
+            // For vehicle-based queries
+            $table->index(['vehicle_id', 'status'], 'idx_trips_vehicle_status');
+            
+            // For area-based queries
+            $table->index(['from_area', 'to_area'], 'idx_trips_areas');
+            
+            // For recent trips (dashboard widgets)
+            $table->index(['created_at', 'status'], 'idx_trips_created_status');
+            
+            // For monthly statistics (chart widgets)
+            $table->index(['start_date', 'status'], 'idx_trips_start_status');
         });
     }
 
